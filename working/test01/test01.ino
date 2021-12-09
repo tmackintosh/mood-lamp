@@ -3,9 +3,9 @@
 #include "Adafruit_TCS34725.h"
 #define sensorOut 8
 
-int ledPin1 = 9;    // LED connected to digital pin 9
-int ledPin2 = 10;
-int ledPin3 = 11;
+int ledPin1 = 9;    // LED connected to digital pin 9 // blue
+int ledPin2 = 10; // green
+int ledPin3 = 11; // red
 
 // Variables for Color Pulse Width Measurements
 int redPW = 0;
@@ -69,7 +69,7 @@ void loop() {
   // Delay to stabilize sensor
   delay(200);
 
-  
+    
 
   // Print output to Serial Monitor
   Serial.print("Red PW = ");
@@ -79,7 +79,9 @@ void loop() {
   Serial.print(" - Blue PW = ");
   Serial.println(bluePW);
   average = ((bluePW + greenPW + redPW) / 3)
-  analogWrite(ledPin1, average);
-  analogWrite(ledPin2, average);
-  analogWrite(ledPin3, average);
+
+  
+  analogWrite(ledPin1, bluePW);
+  analogWrite(ledPin2, redPW);
+  analogWrite(ledPin3, greenPW);
 }
