@@ -2,6 +2,18 @@
 #include <Wire.h>
 #include "Adafruit_TCS34725.h"
 #define sensorOut 8
+#include <LiquidCrystal.h>
+
+
+
+// Creates an LCD object. Parameters: (RS, E, D4, D5, D6, D7)
+LiquidCrystal lcd = LiquidCrystal(2, 3, 4, 5, 6, 7);
+
+
+
+
+
+
 
 int ledPin1 = 9;    // LED connected to digital pin 9 // blue
 int ledPin2 = 10; // green
@@ -17,6 +29,8 @@ Adafruit_TCS34725 tcs = Adafruit_TCS34725(TCS34725_INTEGRATIONTIME_700MS, TCS347
 
 
 void setup() {
+  lcd.begin(16, 2);
+  lcd.print("scrollDisplayLeft() example");
   Serial.begin(9600);
   if (tcs.begin()) {
   Serial.println("Found sensor");} 
@@ -81,7 +95,17 @@ void loop() {
   average = ((bluePW + greenPW + redPW) / 3)
 
   
-  analogWrite(ledPin1, bluePW);
-  analogWrite(ledPin2, redPW);
+  analogWrite(ledPin1, redPW);
+  analogWrite(ledPin2, bluePW);
   analogWrite(ledPin3, greenPW);
+  if (redPW > 100){
+    lcd.scrollDisplayLeft("MELLOW");
+  } else if (bluePW > 100){
+    lcd.scrollDisplayLeft("FOCUS");
+  } else if (greenPW > 100){
+    lcd.scrollDisplayLeft("ANGRY");
+  }
+  
+  lcd.scrollDisplayLeft();
+  delay(500);
 }
