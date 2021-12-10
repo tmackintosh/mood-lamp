@@ -13,29 +13,15 @@
 #define commonAnode true// our RGB -> eye-recognized gamma color
 byte gammatable[256];
 Adafruit_TCS34725 tcs = Adafruit_TCS34725(TCS34725_INTEGRATIONTIME_50MS, TCS34725_GAIN_4X);
-
-
-
-
-
-
-
 // Creates an LCD object. Parameters: (RS, E, D4, D5, D6, D7)
 LiquidCrystal lcd = LiquidCrystal(2, 3, 4, 5, 6, 7);
-
-
-
-
-
-
-
 
 // Variables for Color Pulse Width Measurements
 int redPW = 0;
 int greenPW = 0;
 int bluePW = 0;
 int average = 0;
-
+int divisor = 10;
 
 
 void setup() {
@@ -139,41 +125,45 @@ void loop() {
   Serial.println(" ");
 
   // Read Red Pulse Width
-  redPW = r/24 ;
+  redPW = r/divisor ;
   // Delay to stabilize sensor
   delay(200);
 
   // Read Green Pulse Width
-  greenPW = g/24;
+  greenPW = g/divisor;
   // Delay to stabilize sensor
   delay(200);
 
   // Read Blue Pulse Width
-  bluePW = b/24;
+  bluePW = b/divisor;
   // Delay to stabilize sensor
   delay(200);
 
     
 
   // Print output to Serial Monitor
-  Serial.print("Red PW = ");
-  Serial.print(redPW);
-  Serial.print(" - Green PW = ");
-  Serial.print(greenPW);
-  Serial.print(" - Blue PW = ");
-  Serial.println(bluePW);
-  average = ((bluePW + greenPW + redPW) / 3);
+
+  average = ((r + g + b) / 3);
 
   
-  analogWrite(bluepin, redPW);
-  analogWrite(greenpin, bluePW);
-  analogWrite(redpin, greenPW);
-  if (redPW > 100){
-    lcd.scrollDisplayLeft("MELLOW");
-  } else if (bluePW > 100){
-    lcd.scrollDisplayLeft("FOCUS");
-  } else if (greenPW > 100){
-    lcd.scrollDisplayLeft("ANGRY");
+  analogWrite(bluepin, r);
+  analogWrite(greenpin, b);
+  analogWrite(redpin, g);
+  if (r > 100){
+    lcd.print(" MELLOW ");
+    for (int x = 0; x <10; x++){
+    lcd.scrollDisplayLeft();
+    }
+  } else if (b > 100){
+    lcd.print("FOCUS");
+    for (int x = 0; x <10; x++){
+    lcd.scrollDisplayLeft();
+    }
+  } else if (g > 100){
+    lcd.print("ANGRY");
+    for (int x = 0; x <10; x++){
+    lcd.scrollDisplayLeft();
+    }
   }
   
   lcd.scrollDisplayLeft();
